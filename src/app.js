@@ -37,7 +37,7 @@ const users = JSON.parse(userData);
 
 
 
-app.get('/', (req, res) => { res.render('index', {title: 'Accounts Summary', accounts});
+app.get('/', (req, res) => { res.render('index', {title: 'Account Summary', accounts });
 });
 // after this we need to adjust index.ejs to display the summary of all the 3 accounts on home page
 
