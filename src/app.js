@@ -56,7 +56,7 @@ app.get('/transfer', (req, res) => res.render('transfer'));
 //post method to calculate account balances after transfers
 app.post('/transfer', (req, res) => {
     accounts[req.body.from].balance = accounts[req.body.from].balance - req.body.amount;
-    accounts[req.body.to].balance   = ParseInt(accounts[req.body.to].balance)+ ParseInt(req.body.amount, 10);
+    accounts[req.body.to].balance   = parseInt(accounts[req.body.to].balance)+ parseInt(req.body.amount, 10);
     const accountsJSON = JSON.stringify(accounts, null, 4);
     fs.writeFileSync(path.join(__dirname, 'json/accounts.json'), accountsJSON, 'utf8');
     res.render('/transfer', {message: 'transfer completed'});
@@ -65,7 +65,7 @@ app.post('/transfer', (req, res) => {
 app.get('/payment', (req, res) => res.render('payment', {account: accounts.credit}));
 app.post('/payment', (req, res) => {
     accounts.credit.balance -= req.body.amount;
-    account.credit.available += ParseInt(req.body.amount, 10);
+    accounts.credit.available += parseInt(req.body.amount, 10);
     const accountsJSON = JSON.stringify(accounts, null, 4);
     fs.writeFileSync(path.join(__dirname, 'json/accounts.json'), accountsJSON, 'utf8');
     res.render('/payment', {message: "payment completed", account: accounts.credit});
@@ -75,7 +75,7 @@ app.get('/profile', (req, res) => {
     res.render('profile', {user: users[0]});
 });
 // we need to include transactions view in the account.ejs
-
+ 
 //to pull everything together, we re going to use app.listen to create an http server , listens on 3000 port
 
 app.listen(3000, () => console.log('PROJECT RUNNING ON PORT 3000'))
