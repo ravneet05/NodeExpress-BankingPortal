@@ -1,13 +1,11 @@
 const fs       = require('fs')
 const path     = require('path')
 const express  = require('express')
-
-
 const app = express();
-
 // use object structuring to create the three consts requiring data.json
-
 const {accounts, users, writeJSON} = require('./data');
+const accountRoutes = require('./routes/accounts');
+const serviceRoutes = require('./routes/services');
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -46,36 +44,38 @@ app.get('/', (req, res) => { res.render('index', {title: 'Account Summary', acco
 // after this we need to adjust index.ejs to display the summary of all the 3 accounts on home page
 
 //after creating links in index.ejs to summary , we need to create route to these transactions in app.js
-app.get('/savings', (req, res) => {res.render('account', { account: accounts.savings });
-});
+// app.get('/savings', (req, res) => {res.render('account', { account: accounts.savings });
+// });
 
-app.get('/checking', (req,res) => {res.render('account', { account: accounts.checking });
-});
+// app.get('/checking', (req,res) => {res.render('account', { account: accounts.checking });
+// });
 
-app.get('/credit', (req, res) => {res.render('account', { account: accounts.credit });
-});
+// app.get('/credit', (req, res) => {res.render('account', { account: accounts.credit });
+// });
 
 //access to the transfer
-app.get('/transfer', (req, res) => res.render('transfer'));
-//post method to calculate account balances after transfers
-app.post('/transfer', (req, res) => {
-    accounts[req.body.from].balance = accounts[req.body.from].balance - req.body.amount;
-    accounts[req.body.to].balance   = parseInt(accounts[req.body.to].balance)+ parseInt(req.body.amount, 10);
-    // const accountsJSON = JSON.stringify(accounts, null, 4);
-    // fs.writeFileSync(path.join(__dirname, 'json/accounts.json'), accountsJSON, 'utf8');
-    writeJSON();
-    res.render('transfer', { message: 'Transfer Completed' });
-});
+// app.get('/transfer', (req, res) => res.render('transfer'));
+// //post method to calculate account balances after transfers
+// app.post('/transfer', (req, res) => {
+//     accounts[req.body.from].balance = accounts[req.body.from].balance - req.body.amount;
+//     accounts[req.body.to].balance   = parseInt(accounts[req.body.to].balance)+ parseInt(req.body.amount, 10);
+//     // const accountsJSON = JSON.stringify(accounts, null, 4);
+//     // fs.writeFileSync(path.join(__dirname, 'json/accounts.json'), accountsJSON, 'utf8');
+//     writeJSON();
+//     res.render('transfer', { message: 'Transfer Completed' });
+// });
 
-app.get('/payment', (req, res) => res.render('payment', {account: accounts.credit}));
-app.post('/payment', (req, res) => {
-    accounts.credit.balance -= req.body.amount;
-    accounts.credit.available += parseInt(req.body.amount, 10);
-    // const accountsJSON = JSON.stringify(accounts, null, 4);
-    // fs.writeFileSync(path.join(__dirname, 'json/accounts.json'), accountsJSON, 'utf8');
-    writeJSON();
-    res.render('payment', {message: "payment completed", account: accounts.credit});
-});
+// app.get('/payment', (req, res) => res.render('payment', {account: accounts.credit}));
+// app.post('/payment', (req, res) => {
+//     accounts.credit.balance -= req.body.amount;
+//     accounts.credit.available += parseInt(req.body.amount, 10);
+//     // const accountsJSON = JSON.stringify(accounts, null, 4);
+//     // fs.writeFileSync(path.join(__dirname, 'json/accounts.json'), accountsJSON, 'utf8');
+//     writeJSON();
+//     res.render('payment', {message: "payment completed", account: accounts.credit});
+// });
+app.use('/account', accountRoutes);
+app.use('/services', serviceRoutes);
 
 app.get('/profile', (req, res) => {
     res.render('profile', {user: users[0]});
