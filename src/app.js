@@ -56,16 +56,16 @@ app.get('/transfer', (req, res) => res.render('transfer'));
 //post method to calculate account balances after transfers
 app.post('/transfer', (req, res) => {
     accounts[req.body.from].balance = accounts[req.body.from].balance - req.body.amount;
-    accounts[req.body.to].balance   = ParseInt(accounts[req.body.to].balance)+ parseInt(req.body.amount, 10);
+    accounts[req.body.to].balance   = ParseInt(accounts[req.body.to].balance)+ ParseInt(req.body.amount, 10);
     const accountsJSON = JSON.stringify(accounts, null, 4);
     fs.writeFileSync(path.join(__dirname, 'json/accounts.json'), accountsJSON, 'utf8');
     res.render('/transfer', {message: 'transfer completed'});
 });
 
-app.get('/payment', (req, res) => res.render('payment', {accounts: accounts.credit}));
+app.get('/payment', (req, res) => res.render('payment', {account: accounts.credit}));
 app.post('/payment', (req, res) => {
     accounts.credit.balance -= req.body.amount;
-    account.credit.available += parseInt(req.body.amount, 10);
+    account.credit.available += ParseInt(req.body.amount, 10);
     const accountsJSON = JSON.stringify(accounts, null, 4);
     fs.writeFileSync(path.join(__dirname, 'json/accounts.json'), accountsJSON, 'utf8');
     res.render('/payment', {message: "payment completed", account: accounts.credit});
