@@ -11,6 +11,9 @@ app.set('view engine', 'ejs');
 //to tell app to find our static directory and how to serve those files 
 app.use(express.static(path.join(__dirname, 'public')))
 
+//add express middleware to handle POST data. With the use function add the express.urlencoded middleware to app. Make sure to set the extended option to true.
+app.use(express.urlencoded({ extended: true }));
+
 
 //this is from next module- file handling and routing
 //read the data from accounts.json file and store in a const called accountdata
@@ -34,9 +37,6 @@ const users = JSON.parse(userData);
 //display summary on home page about accounts
 
 
-
-
-
 app.get('/', (req, res) => { res.render('index', {title: 'Account Summary', accounts });
 });
 // after this we need to adjust index.ejs to display the summary of all the 3 accounts on home page
@@ -49,6 +49,26 @@ app.get('/checking', (req,res) => {res.render('account', { account: accounts.che
 });
 
 app.get('/credit', (req, res) => {res.render('account', { account: accounts.credit });
+});
+
+//access to the transfer
+app.get('/transfer', (req, res) => res.render('transfer'));
+//post method to calculate account balances after transfers
+// app.post('/transfer', (req, res) => {
+//     // accounts[req.body.from].balance = accounts[req.body.from].balance - req.body.amount;
+//     // accounts[req.body.to].balance   = ParseInt(accounts[req.body.to].balance)+ parseInt(req.body.amount, 10);
+//     // const accountsJSON = JSON.stringify(accounts, null, 4);
+//     // fs.writeFileSync(path.join(__dirname, 'json/accounts.json'), accountsJSON, 'utf8');
+//     res.render('/transfer', {message: 'transfer completed'});
+// });
+
+app.get('/payment', (req, res) => res.render('payment', {accounts: accounts.credit}));
+app.post('/payment', (req, res) => {
+    accounts.credit.balance -= req.body.amount;
+    account.credit.available += parseInt(req.body.amount, 10);
+    const accountsJSON = JSON.stringify(accounts, null, 4);
+    fs.writeFileSync(path.join(__dirname, 'json/accounts.json'), accountsJSON, 'utf8');
+    res.render('/payment', {message: "payment completed", account: accounts.credit});
 });
 
 app.get('/profile', (req, res) => {
