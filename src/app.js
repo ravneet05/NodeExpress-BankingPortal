@@ -5,6 +5,10 @@ const express  = require('express')
 
 const app = express();
 
+// use object structuring to create the three consts requiring data.json
+
+const {accounts, users, writeJSON} = require('./data');
+
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
@@ -19,15 +23,15 @@ app.use(express.urlencoded({ extended: true }));
 //read the data from accounts.json file and store in a const called accountdata
 //readfile sync accepts 2 args - absolute path and encoding
 
-const accountData = fs.readFileSync(path.join(__dirname, 'json', 'accounts.json'), 'utf8');
+// const accountData = fs.readFileSync(path.join(__dirname, 'json', 'accounts.json'), 'utf8');
 
-//to work with this data we need to convert it into a javascript object
+// //to work with this data we need to convert it into a javascript object
 
-const accounts = JSON.parse(accountData);
+// const accounts = JSON.parse(accountData);
 
-const userData = fs.readFileSync(path.join(__dirname, 'json', 'users.json'), 'utf8');
+// const userData = fs.readFileSync(path.join(__dirname, 'json', 'users.json'), 'utf8');
 
-const users = JSON.parse(userData);
+// const users = JSON.parse(userData);
 //we need to prepare a file index.ejs which will be rendered by index route, this will be created in views folder.
 //which will be rendered here using app.get
 //app.get uses two parameters , the url path and call back func
@@ -57,8 +61,9 @@ app.get('/transfer', (req, res) => res.render('transfer'));
 app.post('/transfer', (req, res) => {
     accounts[req.body.from].balance = accounts[req.body.from].balance - req.body.amount;
     accounts[req.body.to].balance   = parseInt(accounts[req.body.to].balance)+ parseInt(req.body.amount, 10);
-    const accountsJSON = JSON.stringify(accounts, null, 4);
-    fs.writeFileSync(path.join(__dirname, 'json/accounts.json'), accountsJSON, 'utf8');
+    // const accountsJSON = JSON.stringify(accounts, null, 4);
+    // fs.writeFileSync(path.join(__dirname, 'json/accounts.json'), accountsJSON, 'utf8');
+    writeJSON();
     res.render('transfer', { message: 'Transfer Completed' });
 });
 
@@ -66,8 +71,9 @@ app.get('/payment', (req, res) => res.render('payment', {account: accounts.credi
 app.post('/payment', (req, res) => {
     accounts.credit.balance -= req.body.amount;
     accounts.credit.available += parseInt(req.body.amount, 10);
-    const accountsJSON = JSON.stringify(accounts, null, 4);
-    fs.writeFileSync(path.join(__dirname, 'json/accounts.json'), accountsJSON, 'utf8');
+    // const accountsJSON = JSON.stringify(accounts, null, 4);
+    // fs.writeFileSync(path.join(__dirname, 'json/accounts.json'), accountsJSON, 'utf8');
+    writeJSON();
     res.render('payment', {message: "payment completed", account: accounts.credit});
 });
 
