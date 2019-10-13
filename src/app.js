@@ -5,7 +5,7 @@ const app = express();
 // use object structuring to create the three consts requiring data.json
 const {accounts, users, writeJSON} = require('./data');
 const accountRoutes = require('./routes/accounts');
-const serviceRoutes = require('./routes/services');
+const servicesRoutes = require('./routes/services');
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
