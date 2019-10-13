@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const {accounts, writeJSON} = ('../data');
+const {accounts, writeJSON} = require('../data');
 
 router.get('/transfer', (req, res) => res.render('transfer'));
 //post method to calculate account balances after transfers
