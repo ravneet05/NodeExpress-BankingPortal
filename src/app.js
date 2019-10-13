@@ -75,7 +75,7 @@ app.get('/', (req, res) => { res.render('index', {title: 'Account Summary', acco
 //     res.render('payment', {message: "payment completed", account: accounts.credit});
 // });
 app.use('/account', accountRoutes);
-app.use('/services', serviceRoutes);
+app.use('/services', servicesRoutes);
 
 app.get('/profile', (req, res) => {
     res.render('profile', {user: users[0]});
